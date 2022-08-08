@@ -3,11 +3,13 @@
 #include <string.h>
 
 int count_upper(char *str, int len) {
-    if (len == 0) {
-        return 0;
+    int count = 0;
+    for (int i = 0; i < len; i++) {
+        if (isupper(str[i])) {
+            count++;
+        }
     }
-    int is_upper = (int)isupper(str[0]);
-    return count_upper(&str[1], len - 1) + is_upper;
+    return count;
 }
 
 char *read_string(char *buf, int cap, int *len) {
