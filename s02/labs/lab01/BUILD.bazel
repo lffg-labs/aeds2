@@ -1,0 +1,13 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+cc_binary(
+    name = "e04",
+    srcs = ["E04.c"],
+)
+
+diff_test(
+    name = "e04-test",
+    bin = ":e04",
+    input = "in.txt",
+    output = "out.txt",
+)
