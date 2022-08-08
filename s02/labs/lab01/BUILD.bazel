@@ -1,13 +1,26 @@
 load("//lib:diff-test.bzl", "diff_test")
 
 cc_binary(
-    name = "e4",
+    name = "e4-c",
     srcs = ["e4.c"],
 )
 
 diff_test(
-    name = "e4-test",
-    bin = ":e4",
+    name = "e4-test-c",
+    bin = ":e4-c",
+    input = "in.txt",
+    output = "out.txt",
+)
+
+java_binary(
+    name = "e4-java",
+    srcs = ["E4.java"],
+    main_class = "E4",
+)
+
+diff_test(
+    name = "e4-test-java",
+    bin = ":e4-java",
     input = "in.txt",
     output = "out.txt",
 )

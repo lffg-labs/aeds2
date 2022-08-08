@@ -19,6 +19,7 @@
     "bazel",
     "bazelrc",
     "buildtools",
+    "curr",
     "genrule",
     "nixpkgs",
     "numtide",
