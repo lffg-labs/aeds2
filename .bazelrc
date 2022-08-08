@@ -1,0 +1,1 @@
+build --copt="-Wall" --copt="-Wextra" --copt="-Wpedantic"
