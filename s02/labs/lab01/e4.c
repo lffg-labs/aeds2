@@ -2,15 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 
-int count_upper_with_acc(char *str, int len, int acc) {
-    if (len == 0) {
-        return acc;
-    }
-    return count_upper_with_acc(&str[1], len - 1, acc + (int)isupper(str[0]));
-}
-
 int count_upper(char *str, int len) {
-    return count_upper_with_acc(str, len, 0);
+    if (len == 0) {
+        return 0;
+    }
+    int is_upper = (int)isupper(str[0]);
+    return count_upper(&str[1], len - 1) + is_upper;
 }
 
 char *read_string(char *buf, int cap, int *len) {
