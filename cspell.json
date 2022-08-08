@@ -17,6 +17,7 @@
   "words": [
     "aeds",
     "bazel",
+    "bazelrc",
     "buildtools",
     "genrule",
     "nixpkgs",
