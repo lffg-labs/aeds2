@@ -21,6 +21,7 @@
     "buildtools",
     "curr",
     "genrule",
+    "jvmopt",
     "nixpkgs",
     "numtide",
     "pkgs",

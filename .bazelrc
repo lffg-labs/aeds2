@@ -1,1 +1,3 @@
 build --copt="-Wall" --copt="-Wextra" --copt="-Wpedantic"
+run --jvmopt='-ea'
+test --jvmopt='-ea'
