@@ -1,0 +1,39 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+java_binary(
+    name = "e01",
+    srcs = ["E01.java"],
+    main_class = "E01",
+)
+
+diff_test(
+    name = "e01-test",
+    bin = ":e01",
+    input = "palindrome-in.txt",
+    output = "palindrome-out.txt",
+)
+
+cc_binary(
+    name = "e02",
+    srcs = ["E02.c"],
+)
+
+diff_test(
+    name = "e02-test",
+    bin = ":e02",
+    input = "palindrome-in.txt",
+    output = "palindrome-out.txt",
+)
+
+java_binary(
+    name = "e03",
+    srcs = ["E03.java"],
+    main_class = "E03",
+)
+
+diff_test(
+    name = "e03-test",
+    bin = ":e03",
+    input = "caesar-in.txt",
+    output = "caesar-out.txt",
+)
