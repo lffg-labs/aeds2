@@ -37,3 +37,16 @@ diff_test(
     input = "caesar-in.txt",
     output = "caesar-out.txt",
 )
+
+java_binary(
+    name = "e04",
+    srcs = ["E04.java"],
+    main_class = "E04",
+)
+
+diff_test(
+    name = "e04-test",
+    bin = ":e04",
+    input = "random-replace-in.txt",
+    output = "random-replace-out.txt",
+)
