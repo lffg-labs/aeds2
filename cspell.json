@@ -12,7 +12,8 @@
   ],
   "useGitignore": true,
   "ignorePaths": [
-    ".git"
+    ".git",
+    "*-{in,out}.txt"
   ],
   "words": [
     "aeds",
