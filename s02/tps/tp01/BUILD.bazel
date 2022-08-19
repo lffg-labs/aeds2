@@ -65,3 +65,15 @@ diff_test(
     input = "is-in.txt",
     output = "is-out.txt",
 )
+
+cc_binary(
+    name = "e07",
+    srcs = ["E07.c"],
+)
+
+diff_test(
+    name = "e07-test",
+    bin = ":e07",
+    input = "is-in.txt",
+    output = "is-out.txt",
+)
