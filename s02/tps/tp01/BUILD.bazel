@@ -102,3 +102,16 @@ diff_test(
     output = "html-out.txt",
     tags = ["manual"],
 )
+
+java_binary(
+    name = "e09",
+    srcs = ["E09.java"],
+    main_class = "E09",
+)
+
+diff_test(
+    name = "e09-test",
+    bin = ":e09",
+    input = "random-access-file-in.txt",
+    output = "random-access-file-out.txt",
+)
