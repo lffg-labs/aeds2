@@ -20,8 +20,12 @@
           bazel_5
           bazel-buildtools
           jdk11
+          jdk
           nodePackages.cspell
         ];
       };
+      shellHook = ''
+        export JDK_HOME=${pkgs.jdk}
+      '';
     });
 }
