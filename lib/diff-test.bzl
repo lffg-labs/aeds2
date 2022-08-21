@@ -5,7 +5,7 @@ load("@bazel_skylib//rules:diff_test.bzl", skylib_diff_test = "diff_test")
 def _loc(target):
     return "$(location {})".format(target)
 
-def diff_test(name, bin, input, output):
+def diff_test(name, bin, input, output, tags = []):
     """Generates a diff test target.
 
     Args:
@@ -13,6 +13,7 @@ def diff_test(name, bin, input, output):
       bin: Binary that should be executed to generate the output.
       input: Input to pass through the stdin.
       output: Expected output.
+      tags: Test tags.
     """
 
     actual_output = "{}_actual-output".format(name)
@@ -37,4 +38,5 @@ def diff_test(name, bin, input, output):
         name = name,
         file1 = actual_output_label,
         file2 = output,
+        tags = tags,
     )
