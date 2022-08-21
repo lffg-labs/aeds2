@@ -21,13 +21,16 @@
     "bazelrc",
     "buildtools",
     "curr",
+    "Evaluable",
     "genrule",
     "jvmopt",
+    "lexme",
     "nixpkgs",
     "numtide",
     "pkgs",
     "skylib",
     "srcs",
+    "tweag",
     "Wextra",
     "Wpedantic"
   ]

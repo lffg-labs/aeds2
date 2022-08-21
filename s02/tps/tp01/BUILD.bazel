@@ -51,7 +51,18 @@ diff_test(
     output = "random-replace-out.txt",
 )
 
-# Missing E5
+java_binary(
+    name = "e05",
+    srcs = ["E05.java"],
+    main_class = "E05",
+)
+
+diff_test(
+    name = "e05-test",
+    bin = ":e05",
+    input = "bool-in.txt",
+    output = "bool-out.txt",
+)
 
 java_binary(
     name = "e06",
