@@ -88,3 +88,17 @@ diff_test(
     input = "is-in.txt",
     output = "is-out.txt",
 )
+
+java_binary(
+    name = "e08",
+    srcs = ["E08.java"],
+    main_class = "E08",
+)
+
+diff_test(
+    name = "e08-test",
+    bin = ":e08",
+    input = "html-in.txt",
+    output = "html-out.txt",
+    tags = ["manual"],
+)
