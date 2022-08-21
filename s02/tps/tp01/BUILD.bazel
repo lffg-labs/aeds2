@@ -115,3 +115,15 @@ diff_test(
     input = "random-access-file-in.txt",
     output = "random-access-file-out.txt",
 )
+
+cc_binary(
+    name = "e10",
+    srcs = ["E10.c"],
+)
+
+diff_test(
+    name = "e10-test",
+    bin = ":e10",
+    input = "random-access-file-in.txt",
+    output = "random-access-file-out.txt",
+)
