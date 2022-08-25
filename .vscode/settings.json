@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "BUILD": "starlark",
+    "WORKSPACE": "starlark",
+    "sstream": "c",
+    "random": "c"
+  }
+}

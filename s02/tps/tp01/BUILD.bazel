@@ -140,3 +140,15 @@ diff_test(
     input = "palindrome-in.txt",
     output = "palindrome-out.txt",
 )
+
+cc_binary(
+    name = "e12",
+    srcs = ["E12.c"],
+)
+
+diff_test(
+    name = "e12-test",
+    bin = ":e12",
+    input = "palindrome-in.txt",
+    output = "palindrome-out.txt",
+)
