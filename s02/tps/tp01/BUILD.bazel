@@ -165,3 +165,16 @@ diff_test(
     input = "caesar-in.txt",
     output = "caesar-out.txt",
 )
+
+java_binary(
+    name = "e15",
+    srcs = ["E15.java"],
+    main_class = "E15",
+)
+
+diff_test(
+    name = "e15-test",
+    bin = ":e15",
+    input = "is-in.txt",
+    output = "is-out.txt",
+)
