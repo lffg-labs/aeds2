@@ -152,3 +152,16 @@ diff_test(
     input = "palindrome-in.txt",
     output = "palindrome-out.txt",
 )
+
+java_binary(
+    name = "e13",
+    srcs = ["E13.java"],
+    main_class = "E13",
+)
+
+diff_test(
+    name = "e13-test",
+    bin = ":e13",
+    input = "caesar-in.txt",
+    output = "caesar-out.txt",
+)
