@@ -127,3 +127,16 @@ diff_test(
     input = "random-access-file-in.txt",
     output = "random-access-file-out.txt",
 )
+
+java_binary(
+    name = "e11",
+    srcs = ["E11.java"],
+    main_class = "E11",
+)
+
+diff_test(
+    name = "e11-test",
+    bin = ":e11",
+    input = "palindrome-in.txt",
+    output = "palindrome-out.txt",
+)
