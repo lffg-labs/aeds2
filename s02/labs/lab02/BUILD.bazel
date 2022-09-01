@@ -11,3 +11,16 @@ diff_test(
     input = "overlapping-str-in.txt",
     output = "overlapping-str-out.txt",
 )
+
+java_binary(
+    name = "e02",
+    srcs = ["E02.java"],
+    main_class = "E02",
+)
+
+diff_test(
+    name = "e02-test",
+    bin = ":e02",
+    input = "mirrored-numbers-in.txt",
+    output = "mirrored-numbers-out.txt",
+)
