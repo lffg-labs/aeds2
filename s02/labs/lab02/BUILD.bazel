@@ -1,0 +1,13 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+cc_binary(
+    name = "e01",
+    srcs = ["E01.c"],
+)
+
+diff_test(
+    name = "e01-test",
+    bin = ":e01",
+    input = "overlapping-str-in.txt",
+    output = "overlapping-str-out.txt",
+)
