@@ -13,7 +13,8 @@
   "useGitignore": true,
   "ignorePaths": [
     ".git",
-    "*-{in,out}.txt"
+    "*-{in,out}.txt",
+    "*.csv"
   ],
   "words": [
     "aeds",
@@ -31,6 +32,7 @@
     "skylib",
     "srcs",
     "tweag",
+    "upvotes",
     "Wextra",
     "Wpedantic"
   ]
