@@ -16,3 +16,20 @@ diff_test(
     input = "games-first-in.txt",
     output = "games-first-out.txt",
 )
+
+java_binary(
+    name = "e03",
+    srcs = ["E03.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E03",
+)
+
+diff_test(
+    name = "e03-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e03",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "games-linear-search-in.txt",
+    output = "games-linear-search-out.txt",
+)
