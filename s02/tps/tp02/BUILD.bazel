@@ -30,6 +30,23 @@ diff_test(
     args = ["$(location //s02/tps/common:etc/games.csv)"],
     bin = ":e03",
     data = ["//s02/tps/common:etc/games.csv"],
-    input = "games-linear-search-in.txt",
-    output = "games-linear-search-out.txt",
+    input = "games-search-in.txt",
+    output = "games-search-out.txt",
+)
+
+java_binary(
+    name = "e04",
+    srcs = ["E04.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E04",
+)
+
+diff_test(
+    name = "e04-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e04",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "games-search-in.txt",
+    output = "games-search-out.txt",
 )
