@@ -1,0 +1,42 @@
+string: allocating 2
+read_line: more 1 to buffer
+attempting to allocate +1 (real len 1) (cap 2) <fit>
+[1] (len 1) (cap 2)
+
+read_line: more 2 to buffer
+attempting to allocate +2 (real len 1) (cap 2) <will realloc>
+string: allocating 4
+[12] (len 2) (cap 4)
+
+read_line: more 3 to buffer
+attempting to allocate +3 (real len 1) (cap 4) <fit>
+[123] (len 3) (cap 4)
+
+read_line: more 7 to buffer
+attempting to allocate +7 (real len 1) (cap 4) <will realloc>
+string: allocating 8
+read_line: more 0 to buffer
+attempting to allocate +0 (real len 8) (cap 8) <fit>
+[1234567] (len 7) (cap 8)
+
+read_line: more 7 to buffer
+attempting to allocate +7 (real len 1) (cap 8) <fit>
+read_line: more 1 to buffer
+attempting to allocate +1 (real len 8) (cap 8) <will realloc>
+string: allocating 16
+[12345678] (len 8) (cap 16)
+
+---
+string: allocating 1
+attempting to allocate +3 (real len 1) (cap 1) <will realloc>
+string: allocating 4
+[abc] (len 3) (cap 4)
+attempting to allocate +1 (real len 4) (cap 4) <will realloc>
+string: allocating 8
+[abcd] (len 4) (cap 8)
+
+string: allocating 4
+attempting to allocate +3 (real len 1) (cap 4) <fit>
+
+attempting to allocate +3 (real len 5) (cap 8) <fit>
+[abcdefg] (len 7) (cap 8)
