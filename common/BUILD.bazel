@@ -1,0 +1,13 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+cc_binary(
+    name = "string",
+    srcs = ["string.c"],
+)
+
+diff_test(
+    name = "string-test",
+    bin = ":string",
+    input = "string-test-in.txt",
+    output = "string-test-out.txt",
+)
