@@ -50,3 +50,54 @@ diff_test(
     input = "games-search-in.txt",
     output = "games-search-out.txt",
 )
+
+java_binary(
+    name = "e05",
+    srcs = ["E05.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E05",
+)
+
+diff_test(
+    name = "e05-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e05",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "e05-in.txt",
+    output = "e05-out.txt",
+)
+
+java_binary(
+    name = "e06",
+    srcs = ["E06.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E06",
+)
+
+diff_test(
+    name = "e06-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e06",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "e06-in.txt",
+    output = "e06-out.txt",
+)
+
+java_binary(
+    name = "e07",
+    srcs = ["E07.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E07",
+)
+
+diff_test(
+    name = "e07-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e07",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "e07-in.txt",
+    output = "e07-out.txt",
+)

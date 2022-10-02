@@ -1,19 +1,175 @@
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
+
+class MyQueue<T> implements Iterable<T> {
+    private T[] data;
+    private int len;
+    private int cap;
+    private int first = 0;
+
+    @SuppressWarnings("unchecked")
+    public MyQueue(int capacity) {
+        cap = capacity;
+        data = (T[]) new Object[cap];
+    }
+
+    public int length() {
+        return len;
+    }
+
+    public boolean isFull() {
+        return len == cap;
+    }
+
+    public void insert(T val) {
+        if (len >= cap) {
+            throw new RuntimeException("Not enough capacity");
+        }
+        data[realIndex(len)] = val;
+        len++;
+    }
+
+    public T remove() {
+        if (len <= 0) {
+            throw new RuntimeException("Already empty");
+        }
+        T removed = data[first];
+        data[first] = null; // Cleaning for sanity's sake—this isn't needed.
+        first = realIndex(1);
+        len--;
+        return removed;
+    }
+
+    public T get(int pos) {
+        checkBoundStrict(pos);
+        return data[realIndex(pos)];
+    }
+
+    public void set(T val, int pos) {
+        checkBoundStrict(pos);
+        data[realIndex(pos)] = val;
+    }
+
+    private int realIndex(int pos) {
+        return (first + pos) % cap;
+    }
+
+    private void checkBoundStrict(int pos) {
+        if (pos >= len) {
+            throw new RuntimeException("Out of bounds");
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new MyQueueIterator<T>(this);
+    }
+
+    class MyQueueIterator<IT> implements Iterator<IT> {
+        private MyQueue<IT> queue;
+        private int curr;
+
+        public MyQueueIterator(MyQueue<IT> queue) {
+            this.queue = queue;
+            curr = 0;
+        }
+
+        public boolean hasNext() {
+            return curr < queue.len;
+        }
+
+        public IT next() {
+            return queue.get(curr++);
+        }
+    }
+}
+
+class E07 {
+    private static final int GAMES_QUEUE_SIZE = 5;
+
+    public static void main(String[] args) throws IOException {
+        String datasetPath = args.length > 0 ? args[0] : "/tmp/games.csv";
+
+        File dataset = new File(datasetPath);
+        HashMap<Integer, Game> gamesDataset = new HashMap<Integer, Game>();
+        try (Scanner s = new Scanner(dataset)) {
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                Game game = Game.fromCSVLine(line);
+                gamesDataset.put(game.getAppId(), game);
+            }
+        }
+
+        MyQueue<Game> selectedGames = new MyQueue<Game>(GAMES_QUEUE_SIZE);
+        try (Scanner s = new Scanner(System.in)) {
+            // Fill the array.
+            consumeGroup(s, (rawId) -> {
+                Game g = gamesDataset.get(Integer.parseInt(rawId));
+                insertAndPrintAverage(g, selectedGames);
+            });
+
+            // Consume control integer (e.g. 20).
+            s.nextLine();
+
+            consumeGroup(s, (rawCmd) -> {
+                String[] cmd = rawCmd.split(" ");
+
+                // For some reason one needs to print the command. -.-'
+                System.out.println(rawCmd);
+
+                switch (cmd[0]) {
+                    case "I": {
+                        Game g = gamesDataset.get(Integer.parseInt(cmd[1]));
+                        insertAndPrintAverage(g, selectedGames);
+                        break;
+                    }
+
+                    case "R": {
+                        Game g = selectedGames.remove();
+                        System.out.println("(R) " + g.getName());
+                        break;
+                    }
+                }
+            });
+        }
+
+        int i = 0;
+        for (Game curr : selectedGames) {
+            System.out.println("[" + (i++) + "] " + curr.toString());
+        }
+    }
+
+    private static void insertAndPrintAverage(Game g, MyQueue<Game> queue) {
+        if (queue.isFull()) {
+            queue.remove();
+        }
+        queue.insert(g);
+        double total = 0;
+        for (Game curr : queue) {
+            total += curr.getAveragePlayTime();
+        }
+        long avg = Math.round(total / queue.length());
+        System.out.println(avg);
+    }
+
+    private static void consumeGroup(Scanner s, Consumer<String> cb) {
+        while (s.hasNextLine()) {
+            String line = s.nextLine().trim();
+            if (line.equals("FIM") || line.isEmpty()) {
+                break;
+            }
+            cb.accept(line);
+        }
+    }
+}
 
 class Game {
     private int appId;
@@ -683,90 +839,6 @@ class Game {
 
         public static String dotFloat(float raw) {
             return String.format("%.2f", raw).replace(",", ".");
-        }
-    }
-}
-
-class E04 {
-    public static void main(String[] args) throws IOException {
-        String datasetPath = args.length > 0 ? args[0] : "/tmp/games.csv";
-
-        File dataset = new File(datasetPath);
-        HashMap<Integer, Game> gamesDataset = new HashMap<Integer, Game>();
-
-        try (Scanner s = new Scanner(dataset)) {
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                Game game = Game.fromCSVLine(line);
-                gamesDataset.put(game.getAppId(), game);
-            }
-        }
-
-        ArrayList<Game> selected = new ArrayList<Game>();
-        try (Scanner s = new Scanner(System.in)) {
-            // Fill the array.
-            consumeGroup(s, (rawId) -> {
-                selected.add(gamesDataset.get(Integer.parseInt(rawId)));
-            });
-
-            // Sort the array so that binary search may be performed.
-            Collections.sort(selected, (a, b) -> {
-                return a.getName().compareTo(b.getName());
-            });
-
-            // Search in the array, measuring time in an ad-hoc manner.
-            AtomicInteger cmp = new AtomicInteger(0);
-            long elapsed = elapsed(() -> {
-                consumeGroup(s, (gameName) -> {
-                    Optional<Game> maybeGame = binarySearch(selected, gameName, (game) -> {
-                        // Needed this monstrosity since I'm within a lambda.
-                        cmp.incrementAndGet();
-                        // Compute the key that one's using to compare two games.
-                        return game.getName();
-                    });
-                    System.out.println(maybeGame.isPresent() ? "SIM" : "NAO");
-                });
-            });
-
-            File perfLog = new File("767637_binaria.txt");
-            try (BufferedWriter w = new BufferedWriter(new FileWriter(perfLog))) {
-                w.write(String.format("%d\t%d", elapsed, cmp.get()));
-            }
-        }
-    }
-
-    private static <T, K extends Comparable<? super K>> Optional<T> binarySearch(
-            List<T> list, K needle, Function<T, K> keyFn) {
-        int left = 0;
-        int right = list.size() - 1;
-        while (left <= right) {
-            int middle = left + (right - left) / 2;
-            T middleEl = list.get(middle);
-            int cmp = keyFn.apply(middleEl).compareTo(needle);
-            if (cmp < 0) {
-                left = middle + 1;
-            } else if (cmp > 0) {
-                right = middle - 1;
-            } else {
-                return Optional.of(middleEl);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private static long elapsed(Runnable r) {
-        long start = System.nanoTime();
-        r.run();
-        return System.nanoTime() - start;
-    }
-
-    private static void consumeGroup(Scanner s, Consumer<String> cb) {
-        while (s.hasNextLine()) {
-            String line = s.nextLine().trim();
-            if (line.equals("FIM")) {
-                break;
-            }
-            cb.accept(line);
         }
     }
 }

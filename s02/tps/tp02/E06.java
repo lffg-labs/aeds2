@@ -1,19 +1,131 @@
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
+
+class MyStack<T> {
+    private T[] data;
+    private int len = 0;
+    private int cap = 0;
+
+    public MyStack() {
+        allocate(4);
+    }
+
+    public MyStack(int capacity) {
+        allocate(capacity);
+    }
+
+    public int length() {
+        return len;
+    }
+
+    public void push(T val) {
+        checkForReallocation();
+        data[len++] = val;
+    }
+
+    public T pop() {
+        return data[--len];
+    }
+
+    public T get(int pos) {
+        checkBoundStrict(pos);
+        return data[pos];
+    }
+
+    public void set(T val, int pos) {
+        checkBoundStrict(pos);
+        data[pos] = val;
+    }
+
+    private void checkBoundStrict(int pos) {
+        if (pos >= len) {
+            throw new RuntimeException("Out of bounds");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void allocate(int cap) {
+        this.cap = cap;
+        data = (T[]) new Object[cap];
+    }
+
+    private void checkForReallocation() {
+        if (len >= cap) {
+            T[] old = data;
+            allocate(cap * 2);
+            for (int i = 0; i < len; i++) {
+                data[i] = old[i];
+            }
+        }
+    }
+}
+
+class E06 {
+    public static void main(String[] args) throws IOException {
+        String datasetPath = args.length > 0 ? args[0] : "/tmp/games.csv";
+
+        File dataset = new File(datasetPath);
+        HashMap<Integer, Game> gamesDataset = new HashMap<Integer, Game>();
+        try (Scanner s = new Scanner(dataset)) {
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                Game game = Game.fromCSVLine(line);
+                gamesDataset.put(game.getAppId(), game);
+            }
+        }
+
+        MyStack<Game> selectedGames = new MyStack<Game>(64);
+        try (Scanner s = new Scanner(System.in)) {
+            // Fill the array.
+            consumeGroup(s, (rawId) -> {
+                selectedGames.push(gamesDataset.get(Integer.parseInt(rawId)));
+            });
+
+            // Consume control integer (e.g. 20).
+            s.nextLine();
+
+            consumeGroup(s, (rawCmd) -> {
+                String[] cmd = rawCmd.split(" ");
+
+                switch (cmd[0]) {
+                    case "I": {
+                        Game g = gamesDataset.get(Integer.parseInt(cmd[1]));
+                        selectedGames.push(g);
+                        break;
+                    }
+
+                    case "R": {
+                        Game g = selectedGames.pop();
+                        System.out.println("(R) " + g.getName());
+                        break;
+                    }
+                }
+            });
+        }
+
+        for (int i = 0; i < selectedGames.length(); i++) {
+            System.out.println("[" + i + "] " + selectedGames.get(i).toString());
+        }
+    }
+
+    private static void consumeGroup(Scanner s, Consumer<String> cb) {
+        while (s.hasNextLine()) {
+            String line = s.nextLine().trim();
+            if (line.equals("FIM") || line.isEmpty()) {
+                break;
+            }
+            cb.accept(line);
+        }
+    }
+}
 
 class Game {
     private int appId;
@@ -683,90 +795,6 @@ class Game {
 
         public static String dotFloat(float raw) {
             return String.format("%.2f", raw).replace(",", ".");
-        }
-    }
-}
-
-class E04 {
-    public static void main(String[] args) throws IOException {
-        String datasetPath = args.length > 0 ? args[0] : "/tmp/games.csv";
-
-        File dataset = new File(datasetPath);
-        HashMap<Integer, Game> gamesDataset = new HashMap<Integer, Game>();
-
-        try (Scanner s = new Scanner(dataset)) {
-            while (s.hasNextLine()) {
-                String line = s.nextLine();
-                Game game = Game.fromCSVLine(line);
-                gamesDataset.put(game.getAppId(), game);
-            }
-        }
-
-        ArrayList<Game> selected = new ArrayList<Game>();
-        try (Scanner s = new Scanner(System.in)) {
-            // Fill the array.
-            consumeGroup(s, (rawId) -> {
-                selected.add(gamesDataset.get(Integer.parseInt(rawId)));
-            });
-
-            // Sort the array so that binary search may be performed.
-            Collections.sort(selected, (a, b) -> {
-                return a.getName().compareTo(b.getName());
-            });
-
-            // Search in the array, measuring time in an ad-hoc manner.
-            AtomicInteger cmp = new AtomicInteger(0);
-            long elapsed = elapsed(() -> {
-                consumeGroup(s, (gameName) -> {
-                    Optional<Game> maybeGame = binarySearch(selected, gameName, (game) -> {
-                        // Needed this monstrosity since I'm within a lambda.
-                        cmp.incrementAndGet();
-                        // Compute the key that one's using to compare two games.
-                        return game.getName();
-                    });
-                    System.out.println(maybeGame.isPresent() ? "SIM" : "NAO");
-                });
-            });
-
-            File perfLog = new File("767637_binaria.txt");
-            try (BufferedWriter w = new BufferedWriter(new FileWriter(perfLog))) {
-                w.write(String.format("%d\t%d", elapsed, cmp.get()));
-            }
-        }
-    }
-
-    private static <T, K extends Comparable<? super K>> Optional<T> binarySearch(
-            List<T> list, K needle, Function<T, K> keyFn) {
-        int left = 0;
-        int right = list.size() - 1;
-        while (left <= right) {
-            int middle = left + (right - left) / 2;
-            T middleEl = list.get(middle);
-            int cmp = keyFn.apply(middleEl).compareTo(needle);
-            if (cmp < 0) {
-                left = middle + 1;
-            } else if (cmp > 0) {
-                right = middle - 1;
-            } else {
-                return Optional.of(middleEl);
-            }
-        }
-        return Optional.empty();
-    }
-
-    private static long elapsed(Runnable r) {
-        long start = System.nanoTime();
-        r.run();
-        return System.nanoTime() - start;
-    }
-
-    private static void consumeGroup(Scanner s, Consumer<String> cb) {
-        while (s.hasNextLine()) {
-            String line = s.nextLine().trim();
-            if (line.equals("FIM")) {
-                break;
-            }
-            cb.accept(line);
         }
     }
 }
