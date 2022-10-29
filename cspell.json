@@ -22,6 +22,7 @@
     "bazelrc",
     "buildtools",
     "curr",
+    "direnv",
     "Evaluable",
     "genrule",
     "jvmopt",
