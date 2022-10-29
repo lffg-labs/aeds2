@@ -1,5 +1,9 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+#
+# BAZEL SKYLIB
+#
+
 http_archive(
     name = "bazel_skylib",
     sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
@@ -12,3 +16,47 @@ http_archive(
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
+
+#
+# io_tweag_rules_nixpkgs and Java toolchain
+#
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    sha256 = "46aa0ca80b77848492aa1564e9201de9ed79588ca1284f8a4f76deb7a0eeccb9",
+    strip_prefix = "rules_nixpkgs-9f08fb2322050991dead17c8d10d453650cf92b7",
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/9f08fb2322050991dead17c8d10d453650cf92b7.tar.gz"],
+)
+
+http_archive(
+    name = "rules_java",
+    sha256 = "ddc9e11f4836265fea905d2845ac1d04ebad12a255f791ef7fd648d1d2215a5b",
+    strip_prefix = "rules_java-5.0.0",
+    url = "https://github.com/bazelbuild/rules_java/archive/refs/tags/5.0.0.tar.gz",
+)
+
+load("@rules_java//java:repositories.bzl", "rules_java_dependencies", "rules_java_toolchains")
+
+rules_java_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+
+rules_nixpkgs_dependencies()
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_java_configure")
+
+nixpkgs_git_repository(
+    name = "nixpkgs",
+    revision = "22.05",
+    sha256 = "0f8c25433a6611fa5664797cd049c80faefec91575718794c701f3b033f2db01",
+)
+
+nixpkgs_java_configure(
+    attribute_path = "jdk11.home",
+    repository = "@nixpkgs",
+    toolchain = True,
+    toolchain_name = "nixpkgs_java",
+    toolchain_version = "11",
+)
+
+rules_java_toolchains()

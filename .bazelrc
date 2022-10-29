@@ -2,3 +2,9 @@ build --copt="-Wall" --copt="-Wextra" --copt="-Wpedantic"
 run --jvmopt='-ea'
 test --jvmopt='-ea'
 test --test_output=errors
+
+build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+build --java_runtime_version=nixpkgs_java_11
+build --tool_java_runtime_version=nixpkgs_java_11
+build --java_language_version=11
+build --tool_java_language_version=11

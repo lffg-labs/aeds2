@@ -18,14 +18,13 @@
         name = "aeds";
         packages = with pkgs; [
           bazel_5
-          bazel-buildtools
           jdk11
-          jdk
+          bazel-buildtools
           nodePackages.cspell
         ];
       };
       shellHook = ''
-        export JDK_HOME=${pkgs.jdk}
+        export JDK_HOME=${pkgs.jdk11}
       '';
     });
 }
