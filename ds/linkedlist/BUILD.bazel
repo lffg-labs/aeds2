@@ -1,0 +1,21 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+java_library(
+    name = "LinkedList",
+    srcs = ["LinkedList.java"],
+)
+
+java_binary(
+    name = "LinkedListTest",
+    srcs = ["LinkedListTest.java"],
+    main_class = "ds.linkedlist.LinkedListTest",
+    deps = [":LinkedList"],
+)
+
+diff_test(
+    name = "LinkedListDiffTest",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":LinkedListTest",
+    data = ["//s02/tps/common:etc/games.csv"],
+    output = "out.txt",
+)
