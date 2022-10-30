@@ -1,0 +1,21 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+java_library(
+    name = "LinkedStack",
+    srcs = ["LinkedStack.java"],
+)
+
+java_binary(
+    name = "LinkedStackTest",
+    srcs = ["LinkedStackTest.java"],
+    main_class = "ds.linkedstack.LinkedStackTest",
+    deps = [":LinkedStack"],
+)
+
+diff_test(
+    name = "LinkedStackDiffTest",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":LinkedStackTest",
+    data = ["//s02/tps/common:etc/games.csv"],
+    output = "out.txt",
+)

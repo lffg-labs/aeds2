@@ -1,0 +1,12 @@
+After creating:
+[] (0)
+After pushing `1`:
+[1] (1)
+After pushing `2`:
+[2, 1] (2)
+Popped (2):
+[1] (1)
+Popped (1):
+[] (0)
+Final:
+[] (0)
