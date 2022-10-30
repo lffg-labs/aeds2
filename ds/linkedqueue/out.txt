@@ -1,0 +1,23 @@
+After creating:
+[] (0)
+Is empty? true
+After pushFront(2):
+[2] (1)
+Is empty? false
+After pushFront(1):
+[1, 2] (2)
+Is full? false
+After pushBack(3):
+[1, 2, 3] (3)
+Is full? true
+Trying to pushBack(4)...
+Caught `Not enough capacity`.
+Showing backwards iteration:
+[3, 2, 1] (3)
+After popFront() -> (1), showing backwards:
+[3, 2] (2)
+Is full? false
+After popBack() -> (3):
+[2] (1)
+After popFront() -> (2):
+[] (0)

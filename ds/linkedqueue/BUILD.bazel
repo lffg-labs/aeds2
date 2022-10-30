@@ -1,0 +1,21 @@
+load("//lib:diff-test.bzl", "diff_test")
+
+java_library(
+    name = "LinkedQueue",
+    srcs = ["LinkedQueue.java"],
+)
+
+java_binary(
+    name = "LinkedQueueTest",
+    srcs = ["LinkedQueueTest.java"],
+    main_class = "ds.linkedqueue.LinkedQueueTest",
+    deps = [":LinkedQueue"],
+)
+
+diff_test(
+    name = "LinkedQueueDiffTest",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":LinkedQueueTest",
+    data = ["//s02/tps/common:etc/games.csv"],
+    output = "out.txt",
+)

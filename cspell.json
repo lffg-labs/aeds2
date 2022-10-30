@@ -28,6 +28,7 @@
     "jvmopt",
     "lexme",
     "linkedlist",
+    "linkedqueue",
     "linkedstack",
     "nixpkgs",
     "numtide",
