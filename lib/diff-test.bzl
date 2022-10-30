@@ -5,7 +5,7 @@ load("@bazel_skylib//rules:diff_test.bzl", skylib_diff_test = "diff_test")
 def _loc(target):
     return "$(location {})".format(target)
 
-def diff_test(name, bin, input, output, data = [], args = [], tags = []):
+def diff_test(name, bin, output, input = None, data = [], args = [], tags = []):
     """Generates a diff test target.
 
     Args:
@@ -21,11 +21,19 @@ def diff_test(name, bin, input, output, data = [], args = [], tags = []):
     actual_output = "{}_actual-output".format(name)
     actual_output_label = ":{}".format(actual_output)
 
+    inputs = []
+
+    if input:
+        inputs.append(input)
+        cmd = "{} {} < {} > $@".format(_loc(bin), " ".join(args), _loc(input))
+    else:
+        cmd = "{} {} > $@".format(_loc(bin), " ".join(args))
+
     native.genrule(
+        cmd = cmd,
         name = actual_output,
-        srcs = data + [input],
+        srcs = data + inputs,
         outs = ["{}.txt".format(actual_output)],
-        cmd = "{} {} < {} > $@".format(_loc(bin), " ".join(args), _loc(input)),
         tools = [bin],
     )
 
