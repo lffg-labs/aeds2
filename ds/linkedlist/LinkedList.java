@@ -77,6 +77,33 @@ class LinkedList<T> implements Iterable<T> {
         at(pos).data = val;
     }
 
+    public void swap(int a, int b) {
+        if (a == b) {
+            return; // noop
+        }
+
+        int max, min;
+        if (a > b) {
+            max = a;
+            min = b;
+        } else {
+            max = b;
+            min = a;
+        }
+        checkBoundStrict(max);
+        int sub = max - min;
+
+        Node<T> fst = at(min);
+        Node<T> snd = fst;
+        while (sub-- > 0) {
+            snd = snd.next;
+        }
+
+        T temp = fst.data;
+        fst.data = snd.data;
+        snd.data = temp;
+    }
+
     private Node<T> at(int pos) {
         checkBoundStrict(pos);
         Node<T> curr = first;

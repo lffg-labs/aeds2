@@ -29,6 +29,19 @@ public class LinkedListTest {
         }
 
         print("Final", l);
+
+        l.push(1);
+        l.push(2);
+        l.push(3);
+        l.push(4);
+        l.push(5);
+        print("New", l);
+
+        l.swap(1, 3);
+        print("After swap @1 with @3", l);
+
+        l.swap(0, 4);
+        print("After swap @0 with @4", l);
     }
 
     private static <T> void print(String label, LinkedList<T> i) {
