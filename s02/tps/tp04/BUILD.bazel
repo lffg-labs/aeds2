@@ -16,3 +16,20 @@ diff_test(
     input = "e01-in.txt",
     output = "e01-out.txt",
 )
+
+java_binary(
+    name = "e02",
+    srcs = ["E02.java"],
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    data = ["//s02/tps/common:etc/games.csv"],
+    main_class = "E02",
+)
+
+diff_test(
+    name = "e02-test",
+    args = ["$(location //s02/tps/common:etc/games.csv)"],
+    bin = ":e02",
+    data = ["//s02/tps/common:etc/games.csv"],
+    input = "e02-in.txt",
+    output = "e02-out.txt",
+)
